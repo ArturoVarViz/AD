@@ -10,7 +10,7 @@ public class BaserelacionalA {
 
     public static void conexion() throws SQLException {
         String driver = "jdbc:postgresql:";
-        String host = "//localhost:"; // tamen poderia ser una ip como "192.168.1.14"
+        String host = "//localhost:"; // tamen podria ser una ip como "192.168.1.14"
         String porto = "5432";
         String sid = "postgres";
         String usuario = "postgres";
@@ -35,7 +35,7 @@ public class BaserelacionalA {
     }
 
     public static void listaProductos() throws SQLException {
-
+        
         Statement st = conn.createStatement();
         String query = ("SELECT * FROM produtos");
         ResultSet rs = st.executeQuery(query);
@@ -49,20 +49,20 @@ public class BaserelacionalA {
         }
     }
     public static void listaProductosCod(String cod) throws SQLException {
-
+        
         Statement st = conn.createStatement();
         String query = ("SELECT * FROM produtos WHERE codigo = '"+cod+"'");
         ResultSet rs = st.executeQuery(query);
 
         while (rs.next()) {
-
+            
             String des = rs.getString("descricion");
             int prez = rs.getInt("prezo");
             java.sql.Date data = rs.getDate("datac");
             System.out.println("Código:" + cod + ",Descipcion:" + des + ",Precio:" + prez + ",Fechas:" + data);
         }
     }
-
+    
     public static void actualizarPre(String cod,int prez)throws
             SQLException{
         Statement st =conn.createStatement();
@@ -72,7 +72,7 @@ public class BaserelacionalA {
     public static void eliminarProducto(String cod) throws SQLException{
         Statement st = conn.createStatement();
         String cadena= ("DELETE FROM produtos WHERE codigo ='"+cod+"'");
-
+        
     }
     public static void main(String[] args) throws SQLException, ParseException {
         conexion();
@@ -81,21 +81,20 @@ public class BaserelacionalA {
         di = format.parse("28022021");
         java.sql.Date df = new java.sql.Date(di.getTime());
         //insireProduto("p6", "cepillo", 9, df);
-        listaProductos();
+        //listaProductos();
+        //listaProductosCod("p1");
+        //actualizarPre("p1",3);
+       
         listaProductosCod("p1");
-        actualizarPre("p1",3);
-
-        listaProductosCod("p1");
-         System.out.println();
+        System.out.println();
         listaProductos();
         eliminarProducto("p1");
         System.out.println();
         listaProductos();
+        
+        
         conn.close();
-
 
     }
 
 }
-
-
