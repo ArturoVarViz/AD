@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 public class BaseRelacionalC {
 
+
     public static Connection conn;
 
     public static void conexion() throws SQLException {
