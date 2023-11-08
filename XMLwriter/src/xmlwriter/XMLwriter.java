@@ -25,7 +25,7 @@ public class XMLwriter {
         writer.writeStartDocument("1.0");
         writer.writeStartElement("produtos");
         Product product = new Product();
-         FileInputStream fis = new FileInputStream("/home/arturo/NetBeansProjects/Serializacion2/products.dat");
+         FileInputStream fis = new FileInputStream("/home/arturo/NetBeansProjects/AD/Serializacion2/products.dat");
         ObjectInputStream ois = new ObjectInputStream(fis);
 
         // Leemos e imprimimos los objetos Product del archivo hasta que llegamos al null
