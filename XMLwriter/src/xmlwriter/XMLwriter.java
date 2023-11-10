@@ -30,20 +30,22 @@ public class XMLwriter {
 
         // Leemos e imprimimos los objetos Product del archivo hasta que llegamos al null
         Product obj;
-        while ((obj = (Product) ois.readObject()) != null) {
-                     
-         String cod = obj.getCod();
-         
-         writer.writeStartElement("product");
-         writer.writeAttribute("cod", obj.getCod());
-         writer.writeAttribute("desc", obj.getDesc());
-         writer.writeAttribute("prezo", Integer.toString(obj.getPrezo()));
-         // Engade aquí outros atributos do produto...
-         writer.writeEndElement(); 
-         
-         
-         
-        }
+     while ((obj = (Product) ois.readObject()) != null) {
+    writer.writeStartElement("product");
+    writer.writeAttribute("cod", obj.getCod());
+
+    writer.writeStartElement("desc");
+    writer.writeCharacters(obj.getDesc());
+    writer.writeEndElement(); // Cierre del elemento "desc"
+
+    writer.writeStartElement("prezo");
+    writer.writeCharacters(Integer.toString(obj.getPrezo()));
+    writer.writeEndElement(); // Cierre del elemento "prezo"
+
+    writer.writeEndElement(); // Cierre del elemento "product"
+}
+
+
         writer.writeEndElement(); // produtos
         writer.writeEndDocument();
         writer.flush();

@@ -1,1 +1,1 @@
-<?xml version="1.0"?><produtos><product cod="p1" desc="parafusos" prezo="3"></product><product cod="p2" desc="cravos" prezo="4"></product><product cod="p3" desc="tachas" prezo="5"></product></produtos>
+<?xml version="1.0"?><produtos><product cod="p1"><desc>parafusos</desc><prezo>3</prezo></product><product cod="p2"><desc>cravos</desc><prezo>4</prezo></product><product cod="p3"><desc>tachas</desc><prezo>5</prezo></product></produtos>
