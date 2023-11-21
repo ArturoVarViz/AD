@@ -43,17 +43,19 @@ public class Pasaxeirosvoosserializadooracle {
     PreparedStatement pstmt = conn.prepareStatement(sql);
     pstmt.setString(1, reserva.getDni());
     pstmt.executeUpdate();
-
+    String sqli ="Select prezo from voos where " +reserva.getIdvooida();
+    String sqlv ="Select prezo from voos where" +reserva.getIdvoovolta();
+           
     // Leer la próxima reserva
     reserva = (Reserva) ois.readObject();
-
-        // Cerrar los streams y la conexión a la base de datos
-      
-    }
-         ois.close();
+ 
+       }
+       // Cerrar los streams y la conexión a la base de datos
+        ois.close();
         fis.close();
         conn.close();
     }
+   
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, SQLException {
         conexion();
         lerReservas();
