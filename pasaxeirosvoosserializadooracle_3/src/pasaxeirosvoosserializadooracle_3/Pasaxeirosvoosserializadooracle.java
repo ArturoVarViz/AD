@@ -7,9 +7,12 @@ import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Pasaxeirosvoosserializadooracle {
+
     private static Connection conn;
 
     public static void conexion() throws SQLException {
@@ -23,7 +26,9 @@ public class Pasaxeirosvoosserializadooracle {
         conn = DriverManager.getConnection(url, usuario, password);
     }
 
-    public static void lerReservas() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, SQLException {
+        conexion();
+        Statement st = conn.createStatement();
         // Crear un stream de entrada para el archivo
         FileInputStream fis = new FileInputStream("reservas");
 
@@ -31,33 +36,47 @@ public class Pasaxeirosvoosserializadooracle {
         ObjectInputStream ois = new ObjectInputStream(fis);
 
         // Leer el objeto del stream y hacer un casting para el tipo de objeto correcto
-        Reserva reserva = (Reserva) ois.readObject();
+        Reserva reserva = null;
 
         // Enquanto a reserva não for nula, continue lendo as reservas
-       while (reserva != null) {
-    // Procesar la reserva aquí
-    System.out.println(reserva.toString());
+        while ((reserva = (Reserva) ois.readObject()) != null) {
+            // Procesar la reserva aquí
+            int codr = reserva.getCodr();
+            String dni = reserva.getDni();
+            int idvooida = reserva.getIdvooida();
+            int idvoovolta = reserva.getIdvoovolta();
 
-    // Incrementar el valor de nreservas en la base de datos para el dni correspondiente
-    String sql = "UPDATE PASAXEIROS SET nreservas = nreservas + 1 WHERE dni = ?";
-    PreparedStatement pstmt = conn.prepareStatement(sql);
-    pstmt.setString(1, reserva.getDni());
-    pstmt.executeUpdate();
-    String sqli ="Select prezo from voos where " +reserva.getIdvooida();
-    String sqlv ="Select prezo from voos where" +reserva.getIdvoovolta();
-           
-    // Leer la próxima reserva
-    reserva = (Reserva) ois.readObject();
- 
-       }
-       // Cerrar los streams y la conexión a la base de datos
+            // Incrementar el valor de nreservas en la base de datos para el dni correspondiente
+            String sql = "UPDATE PASAXEIROS SET nreservas = nreservas + 1 WHERE dni = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, dni);
+            pstmt.executeUpdate();
+
+            String queryIda = "SELECT * FROM voos WHERE voo = " + idvooida;
+            ResultSet rsIda = st.executeQuery(queryIda);
+            rsIda.next();
+            int prezoIda = rsIda.getInt("prezo");
+            System.out.println("ida" + prezoIda);
+
+            String queryVolta = "SELECT * FROM voos WHERE voo = " + idvoovolta;
+            ResultSet rsVolta = st.executeQuery(queryVolta);
+            rsVolta.next();
+            int prezoVolta = rsVolta.getInt("prezo");
+            System.out.println("volta" + prezoVolta);
+
+            String queryDni = "SELECT * FROM pasaxeiros WHERE dni = '" + dni + "'";
+            ResultSet rsDni = st.executeQuery(queryDni);
+            rsDni.next();
+            String nome = rsDni.getString("nome");
+            System.out.println(nome);
+            
+           int prezoreserva = prezoIda + prezoVolta;
+            System.out.println(prezoreserva);
+           String reservasFeitas = "INSERT INTO reservasfeitas (codr, dni, nome, prezoreserva) VALUES ( "+codr+",'" + dni + "', '" + nome + "', " + prezoreserva + ")";
+           st.executeUpdate(reservasFeitas);
+        }
         ois.close();
         fis.close();
         conn.close();
-    }
-   
-    public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, SQLException {
-        conexion();
-        lerReservas();
     }
 }
