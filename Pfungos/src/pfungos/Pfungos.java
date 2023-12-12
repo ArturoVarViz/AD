@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -49,17 +50,46 @@ public class Pfungos {
             int codr = detectados.getCodarea();
             int codFungo = detectados.getCodfungo();
             int numero = detectados.getNumero();
-            double superficie =detectados.getSuperficie();
+            double superficief =detectados.getSuperficie();
             
               String sql = "UPDATE areas SET numerofungos=numerofungos + 1 WHERE coda=?";
               PreparedStatement pstmt = conn.prepareStatement(sql);
               pstmt.setInt(1, codr);
               pstmt.executeUpdate();
              
-             
-               System.out.println("codarea:"+codr+", codFungos:"+ codFungo+", numero:"+ numero+", superficie:"+superficie);
+         
+            String nome = "SELECT * FROM areas WHERE numerofungos > 0";
+            ResultSet rsNome = st.executeQuery(nome);
+            rsNome.next();
+            String noma = rsNome.getString("noma");
+
+            String humedad = "SELECT hummedia FROM areas WHERE numerofungos > 0";
+            ResultSet rsHumedad = st.executeQuery(humedad);
+            rsHumedad.next();
+            int humedadArea = rsHumedad.getInt("hummedia");
+
+            String humedadlim = "SELECT humlimite FROM fungos WHERE id='" + codFungo + "'";
+            ResultSet rsHumedadlim = st.executeQuery(humedadlim);
+            rsHumedadlim.next();
+            int humedadFungo = rsHumedadlim.getInt("humlimite");
+            
+            String superficie = "SELECT superficie FROM areas WHERE numerofungos > 0";
+            ResultSet rsSuperficie = st.executeQuery(superficie);
+            rsSuperficie.next();
+            int superficieint = rsSuperficie.getInt("superficie");
+                
+            if(humedadArea >= humedadFungo){
+               
+               System.out.println(noma+"/"+superficief+"/"+superficief*100/superficieint);
+               System.out.println();
+            }
+
+              
+              System.out.println("codarea:"+codr+", codFungos:"+ codFungo+", numero:"+ numero+", superficie:"+superficie);
+               
         
         }
+        
         ois.close();
         fis.close();
         conn.close();
